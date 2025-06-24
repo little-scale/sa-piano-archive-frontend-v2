@@ -1,50 +1,71 @@
+// pages/search.js
 import { useState } from 'react';
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
     if (!query) return;
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    setLoading(true);
+    const res = await fetch(`https://sa-piano-archive.onrender.com/search?q=${encodeURIComponent(query)}`);
     const data = await res.json();
     setResults(data);
+    setLoading(false);
   };
 
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Search the Archive</h1>
-      <div style={{ marginTop: '1rem' }}>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search..."
-          style={{ padding: '0.5rem', width: '300px' }}
-        />
-        <button onClick={handleSearch} style={{ padding: '0.5rem', marginLeft: '1rem' }}>
-          Search
-        </button>
-      </div>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search by composer, performer, or venue..."
+        style={{ padding: '0.5rem', width: '60%', marginRight: '1rem' }}
+      />
+      <button onClick={handleSearch} style={{ padding: '0.5rem 1rem' }}>
+        Search
+      </button>
+
+      {loading && <p>Loading...</p>}
 
       {results && (
         <div style={{ marginTop: '2rem' }}>
-          {results.concerts.length === 0 &&
-           results.performers.length === 0 &&
-           results.works.length === 0 ? (
-            <p>No results found.</p>
-          ) : (
+          <h2>Results</h2>
+
+          <h3>Concerts</h3>
+          {results.concerts.length > 0 ? (
             <ul>
-              {results.concerts.map((c) => (
-                <li key={`concert-${c.id}`}><strong>Concert:</strong> {c.venue} ({c.datetime})</li>
-              ))}
-              {results.performers.map((p) => (
-                <li key={`performer-${p.id}`}><strong>Performer:</strong> {p.performer}</li>
-              ))}
-              {results.works.map((w) => (
-                <li key={`work-${w.id}`}><strong>Work:</strong> {w.composer} - {w.work_title}</li>
+              {results.concerts.map((concert) => (
+                <li key={concert.id}>{concert.venue} ({concert.datetime})</li>
               ))}
             </ul>
+          ) : (
+            <p>No concerts found.</p>
+          )}
+
+          <h3>Performers</h3>
+          {results.performers.length > 0 ? (
+            <ul>
+              {results.performers.map((p) => (
+                <li key={p.id}>{p.performer} ({p.nationality})</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No performers found.</p>
+          )}
+
+          <h3>Works</h3>
+          {results.works.length > 0 ? (
+            <ul>
+              {results.works.map((w) => (
+                <li key={w.id}>{w.composer} – {w.work_title}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No works found.</p>
           )}
         </div>
       )}
