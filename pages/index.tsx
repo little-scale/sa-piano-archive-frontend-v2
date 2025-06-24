@@ -1,34 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-interface Concert {
+type Concert = {
   id: number;
+  datetime: string;
   venue: string;
   series: string;
-  datetime: string;
-}
+  note: string;
+};
 
-export default function HomePage() {
+export default function Home() {
   const [concerts, setConcerts] = useState<Concert[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://sa-piano-archive.onrender.com/concerts")
-      .then((res) => res.json())
-      .then((data) => setConcerts(data))
-      .catch((err) => console.error("Failed to fetch concerts:", err));
+    async function fetchConcerts() {
+      try {
+        const res = await fetch('https://sa-piano-archive.onrender.com/concerts');
+        const data = await res.json();
+        setConcerts(data);
+      } catch (error) {
+        console.error('Failed to fetch concerts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchConcerts();
   }, []);
 
+  if (loading) return <p>Loading concerts...</p>;
+
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-bold mb-4">SA Piano Archive – Concerts</h1>
-      <ul className="space-y-2">
+    <div style={{ padding: '2rem' }}>
+      <h1>SA Piano Recital Archive</h1>
+      <ul>
         {concerts.map((concert) => (
-          <li key={concert.id} className="border p-4 rounded">
-            <p><strong>{concert.series || "Untitled"}</strong></p>
-            <p>{concert.venue}</p>
-            <p>{new Date(concert.datetime).toLocaleString()}</p>
+          <li key={concert.id}>
+            <Link href={`/concert/${concert.id}`}>
+              <strong>{new Date(concert.datetime).toLocaleDateString()}</strong> – {concert.venue} ({concert.series})
+            </Link>
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 }
