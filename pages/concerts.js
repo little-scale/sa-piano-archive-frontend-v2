@@ -1,24 +1,38 @@
+// pages/concerts.js
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-export default function Concerts() {
+export default function ConcertsPage() {
   const [concerts, setConcerts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://sa-piano-archive.onrender.com/concerts')
-      .then(res => res.json())
-      .then(setConcerts);
+    async function fetchConcerts() {
+      try {
+        const res = await fetch('https://sa-piano-archive.onrender.com/concerts');
+        const data = await res.json();
+        setConcerts(data);
+      } catch (error) {
+        console.error('Failed to fetch concerts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchConcerts();
   }, []);
 
+  if (loading) return <p>Loading concerts...</p>;
+
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Concerts</h1>
-      <ul className="space-y-2">
-        {concerts.map(concert => (
-          <li key={concert.id} className="border p-4 rounded bg-white shadow">
-            <p><strong>Date:</strong> {new Date(concert.datetime).toLocaleString()}</p>
-            <p><strong>Performer:</strong> {concert.performer}</p>
-            <p><strong>Venue:</strong> {concert.venue}</p>
-            <a href={`/concert/${concert.id}`} className="text-blue-600 underline">View Details</a>
+    <div style={{ padding: '2rem' }}>
+      <h1>Browse Concerts</h1>
+      <ul>
+        {concerts.map((concert) => (
+          <li key={concert.id}>
+            <Link href={`/concert/${concert.id}`}>
+              <strong>{new Date(concert.datetime).toLocaleDateString()}</strong> – {concert.venue} ({concert.series})
+            </Link>
           </li>
         ))}
       </ul>
