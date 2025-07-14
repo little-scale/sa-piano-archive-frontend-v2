@@ -11,13 +11,13 @@ export default function Performers() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>Browse Performers</h1>
+    <div style={{ padding: '2rem' }}>
+      <h1>Performers</h1>
       <ul>
-        {performers.map((performer) => (
-          <li key={performer.id} style={{ marginBottom: '0.5rem' }}>
-            <Link href={`/concerts?performer=${encodeURIComponent(performer.performer)}`}>
-              {performer.performer} {performer.nationality && `(${performer.nationality})`}
+        {performers.map((p) => (
+          <li key={p.id}>
+            <Link href={`/performers/${encodeURIComponent(p.performer)}`}>
+              {p.performer} ({p.nationality || 'Unknown'})
             </Link>
           </li>
         ))}
