@@ -42,7 +42,7 @@ export default function Concerts() {
           {sortedConcerts.map((concert) => (
             <tr key={concert.id}>
               <td style={{ padding: '0.5rem' }}>
-                <Link href={`/concerts/${concert.id}`}>
+                <Link href={`/concert/${concert.id}`}>
                   {new Date(concert.datetime).toLocaleString()}
                 </Link>
               </td>
