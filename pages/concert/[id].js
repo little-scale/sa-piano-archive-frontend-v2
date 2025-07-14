@@ -54,18 +54,39 @@ export default function ConcertDetail() {
         ))}
       </ul>
 
-      <style jsx>{`
-        a:hover {
-          color: #0050a0;
-          text-decoration: underline;
-        }
-      `}</style>
+      <style jsx>{hoverStyles}</style>
     </div>
   );
 }
 
 const linkStyle = {
+  position: 'relative',
   color: '#0366d6',
   textDecoration: 'none',
   cursor: 'pointer',
 };
+
+const hoverStyles = `
+  a {
+    position: relative;
+    text-decoration: none;
+    color: #0366d6;
+    transition: color 0.3s;
+  }
+  a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #0366d6;
+    transition: width 0.3s;
+  }
+  a:hover {
+    color: #0050a0;
+  }
+  a:hover::after {
+    width: 100%;
+  }
+`;
