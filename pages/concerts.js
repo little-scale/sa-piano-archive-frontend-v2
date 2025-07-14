@@ -40,7 +40,9 @@ export default function Concerts() {
         <tbody>
           {sortedConcerts.map((concert) => (
             <tr key={concert.id}>
-              <td style={{ padding: '0.5rem' }}>{new Date(concert.datetime).toLocaleString()}</td>
+              <td style={{ padding: '0.5rem' }}><Link href={`/concerts/${concert.id}`}>
+  {new Date(concert.datetime).toLocaleString()}
+</Link></td>
               <td style={{ padding: '0.5rem' }}>{concert.venue}</td>
               <td style={{ padding: '0.5rem' }}>{concert.organiser}</td>
               <td style={{ padding: '0.5rem' }}>{concert.performers || '-'}</td>
