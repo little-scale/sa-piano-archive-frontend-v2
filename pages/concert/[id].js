@@ -17,12 +17,16 @@ export default function ConcertDetail() {
   if (!concert) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
-      <Link href="/concerts">&larr; Back to list</Link>
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6 }}>
+      <Link href="/concerts" style={{ color: '#0366d6', textDecoration: 'none' }}>
+        &larr; Back to list
+      </Link>
+
       <h2 style={{ marginTop: '1rem' }}>
         {new Date(concert.datetime).toLocaleDateString()} {' '}
         {new Date(concert.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} – {concert.venue}
       </h2>
+
       <p><strong>Organiser:</strong> {concert.organiser}</p>
       <p><strong>Note:</strong> {concert.note || '-'}</p>
 
@@ -31,17 +35,17 @@ export default function ConcertDetail() {
         {concert.program.map((item, idx) => (
           <li key={idx} style={{ marginBottom: '1.5rem' }}>
             <div>
-              <Link href={`/works/${item.work_id}`}>
+              <Link href={`/works/${item.work_id}`} style={linkStyle}>
                 <strong>{item.work_title}</strong>
               </Link>{' '}
               by{' '}
-              <Link href={`/composers/${encodeURIComponent(item.composer)}`}>
+              <Link href={`/composers/${encodeURIComponent(item.composer)}`} style={linkStyle}>
                 {item.composer}
               </Link>
             </div>
             <div>
               Performed by:{' '}
-              <Link href={`/performers/${encodeURIComponent(item.performer)}`}>
+              <Link href={`/performers/${encodeURIComponent(item.performer)}`} style={linkStyle}>
                 {item.performer}
               </Link>
             </div>
@@ -49,6 +53,19 @@ export default function ConcertDetail() {
           </li>
         ))}
       </ul>
+
+      <style jsx>{`
+        a:hover {
+          color: #0050a0;
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 }
+
+const linkStyle = {
+  color: '#0366d6',
+  textDecoration: 'none',
+  cursor: 'pointer',
+};
