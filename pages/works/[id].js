@@ -8,6 +8,7 @@ export default function WorkConcerts() {
   const [concerts, setConcerts] = useState([]);
 
   useEffect(() => {
+    console.log('Fetching concerts for work id:', id);
     if (!id) return;
     fetch(`https://sa-piano-archive.onrender.com/works/${id}/concerts`)
       .then((res) => res.json())
