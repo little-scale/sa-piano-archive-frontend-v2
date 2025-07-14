@@ -1,20 +1,18 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-export default function WorkConcerts() {
-  const router = useRouter();
-  const { id } = router.query;
-  const [concerts, setConcerts] = useState([]);
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+  const res = await fetch(`https://sa-piano-archive.onrender.com/works/${id}/concerts`);
+  const concerts = await res.json();
 
-  useEffect(() => {
-    console.log('Fetching concerts for work id:', id);
-    if (!id) return;
-    fetch(`https://sa-piano-archive.onrender.com/works/${id}/concerts`)
-      .then((res) => res.json())
-      .then((data) => setConcerts(data));
-  }, [id]);
+  return {
+    props: {
+      concerts,
+    },
+  };
+}
 
+export default function WorkConcerts({ concerts }) {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Concerts Featuring This Work</h1>
