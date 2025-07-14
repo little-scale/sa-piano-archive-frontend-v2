@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Performers() {
   const [performers, setPerformers] = useState([]);
@@ -11,11 +12,13 @@ export default function Performers() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1 style={{ marginBottom: '1rem' }}>Browse Performers</h1>
+      <h1>Browse Performers</h1>
       <ul>
         {performers.map((performer) => (
           <li key={performer.id} style={{ marginBottom: '0.5rem' }}>
-            {performer.performer} {performer.nationality && `(${performer.nationality})`}
+            <Link href={`/concerts?performer=${encodeURIComponent(performer.performer)}`}>
+              {performer.performer} {performer.nationality && `(${performer.nationality})`}
+            </Link>
           </li>
         ))}
       </ul>
