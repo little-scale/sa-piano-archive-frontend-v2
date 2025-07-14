@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Composers() {
   const [composers, setComposers] = useState([]);
@@ -7,7 +8,7 @@ export default function Composers() {
     fetch('https://sa-piano-archive.onrender.com/works')
       .then((res) => res.json())
       .then((data) => {
-        const uniqueComposers = [...new Set(data.map(work => work.composer))].sort();
+        const uniqueComposers = [...new Set(data.map(work => work.composer))].filter(Boolean).sort();
         setComposers(uniqueComposers);
       });
   }, []);
@@ -18,7 +19,9 @@ export default function Composers() {
       <ul>
         {composers.map((composer, idx) => (
           <li key={idx} style={{ marginBottom: '0.5rem' }}>
-            {composer}
+            <Link href={`/composers/${encodeURIComponent(composer)}`}>
+              {composer}
+            </Link>
           </li>
         ))}
       </ul>
