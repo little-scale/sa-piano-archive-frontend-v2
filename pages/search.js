@@ -1,74 +1,59 @@
-// pages/search.js
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
-export default function SearchPage() {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
+export default function Search() {
+  const router = useRouter();
+  const { q } = router.query;
+  const [results, setResults] = useState({ concerts: [], performers: [], works: [] });
 
-  const handleSearch = async () => {
-    if (!query) return;
-    setLoading(true);
-    const res = await fetch(`https://sa-piano-archive.onrender.com/search?q=${encodeURIComponent(query)}`);
-    const data = await res.json();
-    setResults(data);
-    setLoading(false);
-  };
+  useEffect(() => {
+    if (!q) return;
+    fetch(`https://sa-piano-archive.onrender.com/search?q=${q}`)
+      .then(res => res.json())
+      .then(setResults);
+  }, [q]);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
       <h1>Search the Archive</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search by composer, performer, or venue..."
-        style={{ padding: '0.5rem', width: '60%', marginRight: '1rem' }}
-      />
-      <button onClick={handleSearch} style={{ padding: '0.5rem 1rem' }}>
-        Search
-      </button>
+      <p style={{ marginBottom: '2rem' }}><em>{q}</em></p>
 
-      {loading && <p>Loading...</p>}
+      <section style={{ marginBottom: '2rem' }}>
+        <h2>Concerts</h2>
+        {results.concerts.length === 0 && <p>No concerts found.</p>}
+        <ul>
+          {results.concerts.map((concert) => (
+            <li key={concert.id}>
+              <Link href={`/concert/${concert.id}`}>
+                {new Date(concert.datetime).toLocaleDateString()} – {concert.venue}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-      {results && (
-        <div style={{ marginTop: '2rem' }}>
-          <h2>Results</h2>
+      <section style={{ marginBottom: '2rem' }}>
+        <h2>Performers</h2>
+        <ul>
+          {[...new Set(results.performers.map(p => p.performer))].map((performer, idx) => (
+            <li key={idx}>
+              <Link href={`/performers/${encodeURIComponent(performer)}`}>{performer}</Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-          <h3>Concerts</h3>
-          {results.concerts.length > 0 ? (
-            <ul>
-              {results.concerts.map((concert) => (
-                <li key={concert.id}>{concert.venue} ({concert.datetime})</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No concerts found.</p>
-          )}
-
-          <h3>Performers</h3>
-          {results.performers.length > 0 ? (
-            <ul>
-              {results.performers.map((p) => (
-                <li key={p.id}>{p.performer} ({p.nationality})</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No performers found.</p>
-          )}
-
-          <h3>Works</h3>
-          {results.works.length > 0 ? (
-            <ul>
-              {results.works.map((w) => (
-                <li key={w.id}>{w.composer} – {w.work_title}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No works found.</p>
-          )}
-        </div>
-      )}
+      <section>
+        <h2>Works</h2>
+        <ul>
+          {results.works.map((work) => (
+            <li key={work.id}>
+              <Link href={`/works/${work.id}`}>{work.composer} – {work.work_title}</Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }
