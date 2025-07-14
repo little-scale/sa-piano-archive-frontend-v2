@@ -12,7 +12,15 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#f5f5f5', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '2rem'
+    }}>
       <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 'bold' }}>
         SA Piano Recital Archive
       </h1>
@@ -23,9 +31,26 @@ export default function Home() {
           placeholder="Search concerts, works, composers, performers..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          style={{ padding: '1rem', width: '300px', fontSize: '1rem' }}
+          style={{ 
+            padding: '1rem', 
+            width: '300px', 
+            fontSize: '1rem', 
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
         />
-        <button type="submit" style={{ padding: '1rem 2rem', marginLeft: '1rem' }}>
+        <button 
+          type="submit" 
+          style={{ 
+            padding: '1rem 2rem', 
+            marginLeft: '1rem',
+            backgroundColor: '#333',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
           Search
         </button>
       </form>
