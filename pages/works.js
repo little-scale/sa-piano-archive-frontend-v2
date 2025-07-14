@@ -6,16 +6,16 @@ export default function Works() {
 
   useEffect(() => {
     fetch('https://sa-piano-archive.onrender.com/works')
-      .then(res => res.json())
-      .then(setWorks);
+      .then((res) => res.json())
+      .then((data) => setWorks(data));
   }, []);
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h1>Works</h1>
+      <h1>Browse Works</h1>
       <ul>
-        {works.map(work => (
-          <li key={work.id}>
+        {works.map((work) => (
+          <li key={work.id} style={{ marginBottom: '0.5rem' }}>
             <Link href={`/works/${work.id}`}>
               {work.composer} — {work.work_title}
             </Link>
