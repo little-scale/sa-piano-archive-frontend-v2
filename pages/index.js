@@ -17,8 +17,8 @@ export default function Home() {
       backgroundColor: '#f5f5f5', 
       display: 'flex', 
       flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: '15vh', // Push down ~30% from the top
       padding: '2rem'
     }}>
       <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 'bold' }}>
